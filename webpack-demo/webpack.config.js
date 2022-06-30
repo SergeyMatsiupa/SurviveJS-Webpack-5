@@ -5,17 +5,20 @@ const { mode } = require("webpack-nano/argv");
 // const { WebpackPluginServe } = require("webpack-plugin-serve");
 const { merge } = require("webpack-merge");
 const parts = require("./webpack.parts");
-const cssLoaders = [parts.tailwind()];
+const cssLoaders = [parts.autoprefix(),parts.tailwind()];
 
 
 const commonConfig = merge([
     { entry: ["./src"] },
     parts.page({ title: "Demo" }),
     // parts.loadCSS(),
-    parts.extractCSS({ loaders: cssLoaders }),
+    parts.extractCSS({ loaders: cssLoaders },
+    parts.loadImages({ limit: 2000 }),
+    ),
   ]);
+// console.log('commonConfig', commonConfig);
 
-const productionConfig = merge([]);
+const productionConfig = merge([parts.eliminateUnusedCSS()]);
 
 const developmentConfig = merge([
     { entry: ["webpack-plugin-serve/client"] },
@@ -25,6 +28,7 @@ const developmentConfig = merge([
 const getConfig = (mode) => {
     switch (mode) {
         case "production":
+                console.log('merge(commonConfig, productionConfig, { mode })', merge(commonConfig, productionConfig, { mode }));
             return merge(commonConfig, productionConfig, { mode });
         case "development":
             return merge(commonConfig, developmentConfig, { mode });

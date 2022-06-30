@@ -9,4 +9,7 @@
 body {
   background: cornsilk;
   color: $navi-background;
+  background-image: url("./1f4fd.png");
+  /* background-repeat: no-repeat; */
+  background-position: center;
 }
